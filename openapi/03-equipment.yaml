@@ -1,0 +1,229 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - Vehicles & Equipment (Ships, Vehicles, Objects)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Ships
+  - name: Vehicles
+  - name: Objects
+paths:
+  /ships:
+    get:
+      operationId: listShips
+      tags: [Ships]
+      summary: List ships in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of ships }
+    post:
+      operationId: createShip
+      tags: [Ships]
+      summary: Create a ship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                class: { type: string }
+                captain: { type: string }
+                crew: { type: string }
+                currentLocation: { type: string }
+                state: { type: string, enum: [operational, damaged, destroyed, docked, in_transit] }
+                description: { type: string }
+                manufacturer: { type: string }
+      responses:
+        '201': { description: Ship created }
+  /ships/{id}:
+    get:
+      operationId: getShip
+      tags: [Ships]
+      summary: Get a ship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Ship found }
+    patch:
+      operationId: updateShip
+      tags: [Ships]
+      summary: Update a ship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                state: { type: string, enum: [operational, damaged, destroyed, docked, in_transit] }
+      responses:
+        '200': { description: Ship updated }
+    delete:
+      operationId: deleteShip
+      tags: [Ships]
+      summary: Soft-delete a ship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Ship deleted }
+  /vehicles:
+    get:
+      operationId: listVehicles
+      tags: [Vehicles]
+      summary: List vehicles in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of vehicles }
+    post:
+      operationId: createVehicle
+      tags: [Vehicles]
+      summary: Create a vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                type: { type: string }
+                owner: { type: string }
+                currentLocation: { type: string }
+                state: { type: string, enum: [operational, damaged, destroyed, stored] }
+                description: { type: string }
+                manufacturer: { type: string }
+      responses:
+        '201': { description: Vehicle created }
+  /vehicles/{id}:
+    get:
+      operationId: getVehicle
+      tags: [Vehicles]
+      summary: Get a vehicle
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Vehicle found }
+    patch:
+      operationId: updateVehicle
+      tags: [Vehicles]
+      summary: Update a vehicle
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                state: { type: string, enum: [operational, damaged, destroyed, stored] }
+      responses:
+        '200': { description: Vehicle updated }
+    delete:
+      operationId: deleteVehicle
+      tags: [Vehicles]
+      summary: Soft-delete a vehicle
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Vehicle deleted }
+  /objects:
+    get:
+      operationId: listObjects
+      tags: [Objects]
+      summary: List objects in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of objects }
+    post:
+      operationId: createObject
+      tags: [Objects]
+      summary: Create an object
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                type: { type: string }
+                owner: { type: string }
+                currentLocation: { type: string }
+                state: { type: string, enum: [intact, damaged, destroyed, lost, unknown] }
+                description: { type: string }
+                rarity: { type: string, enum: [common, uncommon, rare, unique, legendary] }
+      responses:
+        '201': { description: Object created }
+  /objects/{id}:
+    get:
+      operationId: getObject
+      tags: [Objects]
+      summary: Get an object
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Object found }
+    patch:
+      operationId: updateObject
+      tags: [Objects]
+      summary: Update an object
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                state: { type: string, enum: [intact, damaged, destroyed, lost, unknown] }
+      responses:
+        '200': { description: Object updated }
+    delete:
+      operationId: deleteObject
+      tags: [Objects]
+      summary: Soft-delete an object
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Object deleted }

@@ -1,0 +1,257 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - Misc & Search (Quotes, Notes, Sessions, Search, Context)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Quotes
+  - name: Notes
+  - name: Sessions
+  - name: Search
+  - name: Context
+paths:
+  /quotes:
+    get:
+      operationId: listQuotes
+      tags: [Quotes]
+      summary: List quotes in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: author, schema: { type: string } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of quotes }
+    post:
+      operationId: createQuote
+      tags: [Quotes]
+      summary: Create a quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, text]
+              properties:
+                campaignId: { type: string }
+                text: { type: string }
+                author: { type: string }
+                context: { type: string }
+      responses:
+        '201': { description: Quote created }
+  /quotes/{id}:
+    get:
+      operationId: getQuote
+      tags: [Quotes]
+      summary: Get a quote
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Quote found }
+    patch:
+      operationId: updateQuote
+      tags: [Quotes]
+      summary: Update a quote
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                text: { type: string }
+                author: { type: string }
+      responses:
+        '200': { description: Quote updated }
+    delete:
+      operationId: deleteQuote
+      tags: [Quotes]
+      summary: Soft-delete a quote
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Quote deleted }
+  /notes:
+    get:
+      operationId: listNotes
+      tags: [Notes]
+      summary: List notes in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: entityId, schema: { type: string }, description: Filter by linked entity ID }
+        - { in: query, name: entityType, schema: { type: string } }
+        - { in: query, name: pinned, schema: { type: boolean } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of notes }
+    post:
+      operationId: createNote
+      tags: [Notes]
+      summary: Create a note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, title, content]
+              properties:
+                campaignId: { type: string }
+                title: { type: string }
+                content: { type: string }
+                entityId: { type: string }
+                entityType: { type: string }
+                pinned: { type: boolean, default: false }
+      responses:
+        '201': { description: Note created }
+  /notes/{id}:
+    get:
+      operationId: getNote
+      tags: [Notes]
+      summary: Get a note
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Note found }
+    patch:
+      operationId: updateNote
+      tags: [Notes]
+      summary: Update a note
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                title: { type: string }
+                content: { type: string }
+                pinned: { type: boolean }
+      responses:
+        '200': { description: Note updated }
+    delete:
+      operationId: deleteNote
+      tags: [Notes]
+      summary: Soft-delete a note
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Note deleted }
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [Sessions]
+      summary: List game sessions in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of sessions }
+    post:
+      operationId: createSession
+      tags: [Sessions]
+      summary: Create a game session record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                date: { type: string, format: date }
+                summary: { type: string }
+                npcsPresent: { type: array, items: { type: string } }
+                eventsOccurred: { type: array, items: { type: string } }
+      responses:
+        '201': { description: Session created }
+  /sessions/{id}:
+    get:
+      operationId: getSession
+      tags: [Sessions]
+      summary: Get a game session
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Session found }
+    patch:
+      operationId: updateSession
+      tags: [Sessions]
+      summary: Update a game session
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                summary: { type: string }
+      responses:
+        '200': { description: Session updated }
+    delete:
+      operationId: deleteSession
+      tags: [Sessions]
+      summary: Soft-delete a game session
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Session deleted }
+  /search:
+    get:
+      operationId: search
+      tags: [Search]
+      summary: Full-text search across all entity types
+      parameters:
+        - { in: query, name: q, required: true, schema: { type: string }, description: Search query (FTS5) }
+        - { in: query, name: campaignId, schema: { type: string }, description: Limit search to a specific campaign }
+        - { in: query, name: types, schema: { type: string }, description: Comma-separated entity types }
+        - { in: query, name: dateFrom, schema: { type: string } }
+        - { in: query, name: dateTo, schema: { type: string } }
+        - { in: query, name: tags, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+      responses:
+        '200': { description: Search results }
+  /context:
+    get:
+      operationId: buildContext
+      tags: [Context]
+      summary: Build scene context for a given location/time/characters
+      description: Returns characters, events, relationships, secrets and knowledge relevant to the given parameters. Useful for GM scene preparation.
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: planet, schema: { type: string } }
+        - { in: query, name: location, schema: { type: string } }
+        - { in: query, name: date, schema: { type: string } }
+        - { in: query, name: characters, schema: { type: string }, description: Comma-separated character IDs }
+        - { in: query, name: radius, schema: { type: number } }
+        - { in: query, name: limit, schema: { type: integer, default: 20 } }
+      responses:
+        '200': { description: Scene context }

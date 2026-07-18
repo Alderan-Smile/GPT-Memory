@@ -1,0 +1,233 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - Knowledge (Secrets, Player Knowledge, World Knowledge)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Secrets
+  - name: PlayerKnowledge
+  - name: WorldKnowledge
+paths:
+  /secrets:
+    get:
+      operationId: listSecrets
+      tags: [Secrets]
+      summary: List secrets in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: revealed, schema: { type: boolean } }
+        - { in: query, name: visibleToPlayer, schema: { type: boolean } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of secrets }
+    post:
+      operationId: createSecret
+      tags: [Secrets]
+      summary: Create a secret
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, title, content]
+              properties:
+                campaignId: { type: string }
+                title: { type: string }
+                content: { type: string }
+                revealed: { type: boolean, default: false }
+                visibleToPlayer: { type: boolean, default: false }
+                conditions: { type: string }
+                importance: { type: integer, minimum: 1, maximum: 10 }
+                relatedEntities: { type: array, items: { type: string } }
+      responses:
+        '201': { description: Secret created }
+  /secrets/{id}:
+    get:
+      operationId: getSecret
+      tags: [Secrets]
+      summary: Get a secret
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Secret found }
+    patch:
+      operationId: updateSecret
+      tags: [Secrets]
+      summary: Update a secret
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                title: { type: string }
+                content: { type: string }
+                revealed: { type: boolean }
+                visibleToPlayer: { type: boolean }
+      responses:
+        '200': { description: Secret updated }
+    delete:
+      operationId: deleteSecret
+      tags: [Secrets]
+      summary: Soft-delete a secret
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Secret deleted }
+  /knowledge/player:
+    get:
+      operationId: listPlayerKnowledge
+      tags: [PlayerKnowledge]
+      summary: List player knowledge entries
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: characterId, schema: { type: string } }
+        - { in: query, name: category, schema: { type: string } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of player knowledge }
+    post:
+      operationId: createPlayerKnowledge
+      tags: [PlayerKnowledge]
+      summary: Create a player knowledge entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, subject, content]
+              properties:
+                campaignId: { type: string }
+                characterId: { type: string }
+                subject: { type: string }
+                content: { type: string }
+                source: { type: string }
+                certainty: { type: number, minimum: 0, maximum: 100 }
+                category: { type: string }
+      responses:
+        '201': { description: Player knowledge created }
+  /knowledge/player/{id}:
+    get:
+      operationId: getPlayerKnowledge
+      tags: [PlayerKnowledge]
+      summary: Get a player knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Player knowledge found }
+    patch:
+      operationId: updatePlayerKnowledge
+      tags: [PlayerKnowledge]
+      summary: Update a player knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                content: { type: string }
+                certainty: { type: number }
+      responses:
+        '200': { description: Player knowledge updated }
+    delete:
+      operationId: deletePlayerKnowledge
+      tags: [PlayerKnowledge]
+      summary: Soft-delete a player knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Player knowledge deleted }
+  /knowledge/world:
+    get:
+      operationId: listWorldKnowledge
+      tags: [WorldKnowledge]
+      summary: List world knowledge entries
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: category, schema: { type: string } }
+        - { in: query, name: canon, schema: { type: boolean } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of world knowledge }
+    post:
+      operationId: createWorldKnowledge
+      tags: [WorldKnowledge]
+      summary: Create a world knowledge entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, subject, content]
+              properties:
+                campaignId: { type: string }
+                subject: { type: string }
+                content: { type: string }
+                category: { type: string }
+                canon: { type: boolean, default: true }
+                sources: { type: array, items: { type: string } }
+      responses:
+        '201': { description: World knowledge created }
+  /knowledge/world/{id}:
+    get:
+      operationId: getWorldKnowledge
+      tags: [WorldKnowledge]
+      summary: Get a world knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: World knowledge found }
+    patch:
+      operationId: updateWorldKnowledge
+      tags: [WorldKnowledge]
+      summary: Update a world knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                content: { type: string }
+                canon: { type: boolean }
+      responses:
+        '200': { description: World knowledge updated }
+    delete:
+      operationId: deleteWorldKnowledge
+      tags: [WorldKnowledge]
+      summary: Soft-delete a world knowledge entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: World knowledge deleted }

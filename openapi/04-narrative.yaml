@@ -1,0 +1,217 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - Narrative (Events, Timeline, Relationships)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Events
+  - name: Timeline
+  - name: Relationships
+paths:
+  /events:
+    get:
+      operationId: listEvents
+      tags: [Events]
+      summary: List events in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: planet, schema: { type: string } }
+        - { in: query, name: era, schema: { type: string } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of events }
+    post:
+      operationId: createEvent
+      tags: [Events]
+      summary: Create an event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, summary]
+              properties:
+                campaignId: { type: string }
+                summary: { type: string }
+                date: { type: string }
+                era: { type: string }
+                planet: { type: string }
+                location: { type: string }
+                importance: { type: integer, minimum: 1, maximum: 10 }
+                canon: { type: boolean }
+                participants: { type: array, items: { type: string } }
+      responses:
+        '201': { description: Event created }
+  /events/{id}:
+    get:
+      operationId: getEvent
+      tags: [Events]
+      summary: Get an event
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Event found }
+    patch:
+      operationId: updateEvent
+      tags: [Events]
+      summary: Update an event
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                summary: { type: string }
+                importance: { type: integer }
+      responses:
+        '200': { description: Event updated }
+    delete:
+      operationId: deleteEvent
+      tags: [Events]
+      summary: Soft-delete an event
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Event deleted }
+  /timeline:
+    get:
+      operationId: listTimeline
+      tags: [Timeline]
+      summary: List timeline entries in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+      responses:
+        '200': { description: Paginated timeline entries }
+    post:
+      operationId: createTimelineEntry
+      tags: [Timeline]
+      summary: Create a timeline entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                date: { type: string }
+                eventId: { type: string }
+                order: { type: integer }
+                label: { type: string }
+      responses:
+        '201': { description: Timeline entry created }
+  /timeline/{id}:
+    get:
+      operationId: getTimelineEntry
+      tags: [Timeline]
+      summary: Get a timeline entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Timeline entry found }
+    patch:
+      operationId: updateTimelineEntry
+      tags: [Timeline]
+      summary: Update a timeline entry
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                order: { type: integer }
+                label: { type: string }
+      responses:
+        '200': { description: Timeline entry updated }
+  /relationships:
+    get:
+      operationId: listRelationships
+      tags: [Relationships]
+      summary: List relationships in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: characterId, schema: { type: string }, description: Filter by character (either side) }
+        - { in: query, name: type, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of relationships }
+    post:
+      operationId: createRelationship
+      tags: [Relationships]
+      summary: Create a relationship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, characterA, characterB, relationshipType]
+              properties:
+                campaignId: { type: string }
+                characterA: { type: string }
+                characterB: { type: string }
+                relationshipType: { type: string }
+                strength: { type: number, minimum: -100, maximum: 100 }
+                history: { type: string }
+      responses:
+        '201': { description: Relationship created }
+  /relationships/{id}:
+    get:
+      operationId: getRelationship
+      tags: [Relationships]
+      summary: Get a relationship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Relationship found }
+    patch:
+      operationId: updateRelationship
+      tags: [Relationships]
+      summary: Update a relationship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                strength: { type: number }
+                history: { type: string }
+      responses:
+        '200': { description: Relationship updated }
+    delete:
+      operationId: deleteRelationship
+      tags: [Relationships]
+      summary: Soft-delete a relationship
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Relationship deleted }

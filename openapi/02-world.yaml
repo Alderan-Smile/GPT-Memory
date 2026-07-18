@@ -1,0 +1,227 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - World Building (Planets, Star Systems, Organizations)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Planets
+  - name: StarSystems
+  - name: Organizations
+paths:
+  /planets:
+    get:
+      operationId: listPlanets
+      tags: [Planets]
+      summary: List planets in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of planets }
+    post:
+      operationId: createPlanet
+      tags: [Planets]
+      summary: Create a planet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                sector: { type: string }
+                region: { type: string }
+                system: { type: string }
+                description: { type: string }
+                climate: { type: string }
+                terrain: { type: string }
+                population: { type: string }
+                government: { type: string }
+      responses:
+        '201': { description: Planet created }
+  /planets/{id}:
+    get:
+      operationId: getPlanet
+      tags: [Planets]
+      summary: Get a planet
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Planet found }
+    patch:
+      operationId: updatePlanet
+      tags: [Planets]
+      summary: Update a planet
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+      responses:
+        '200': { description: Planet updated }
+    delete:
+      operationId: deletePlanet
+      tags: [Planets]
+      summary: Soft-delete a planet
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Planet deleted }
+  /star-systems:
+    get:
+      operationId: listStarSystems
+      tags: [StarSystems]
+      summary: List star systems in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of star systems }
+    post:
+      operationId: createStarSystem
+      tags: [StarSystems]
+      summary: Create a star system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                sector: { type: string }
+                region: { type: string }
+                coordinates: { type: string }
+                description: { type: string }
+      responses:
+        '201': { description: Star system created }
+  /star-systems/{id}:
+    get:
+      operationId: getStarSystem
+      tags: [StarSystems]
+      summary: Get a star system
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Star system found }
+    patch:
+      operationId: updateStarSystem
+      tags: [StarSystems]
+      summary: Update a star system
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+      responses:
+        '200': { description: Star system updated }
+    delete:
+      operationId: deleteStarSystem
+      tags: [StarSystems]
+      summary: Soft-delete a star system
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Star system deleted }
+  /organizations:
+    get:
+      operationId: listOrganizations
+      tags: [Organizations]
+      summary: List organizations in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of organizations }
+    post:
+      operationId: createOrganization
+      tags: [Organizations]
+      summary: Create an organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+                leader: { type: string }
+                type: { type: string }
+                alignment: { type: string }
+                headquarters: { type: string }
+      responses:
+        '201': { description: Organization created }
+  /organizations/{id}:
+    get:
+      operationId: getOrganization
+      tags: [Organizations]
+      summary: Get an organization
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Organization found }
+    patch:
+      operationId: updateOrganization
+      tags: [Organizations]
+      summary: Update an organization
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+      responses:
+        '200': { description: Organization updated }
+    delete:
+      operationId: deleteOrganization
+      tags: [Organizations]
+      summary: Soft-delete an organization
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Organization deleted }

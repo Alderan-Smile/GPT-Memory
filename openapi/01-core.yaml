@@ -1,0 +1,279 @@
+﻿openapi: 3.1.0
+info:
+  title: GPT Memory API - Core (Health, Campaigns, Characters, Locations)
+  version: 1.0.0
+servers:
+  - url: https://gpt-memory.jokertcnr.workers.dev/api
+    description: Production
+tags:
+  - name: Health
+  - name: Campaigns
+  - name: Characters
+  - name: Locations
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: object }
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /campaigns:
+    get:
+      operationId: listCampaigns
+      tags: [Campaigns]
+      summary: List all campaigns
+      parameters:
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string }, description: Search by name }
+      responses:
+        '200': { description: List of campaigns with pagination }
+    post:
+      operationId: createCampaign
+      tags: [Campaigns]
+      summary: Create a campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                description: { type: string }
+                metadata: { type: object }
+      responses:
+        '201': { description: Campaign created }
+  /campaigns/{id}:
+    get:
+      operationId: getCampaign
+      tags: [Campaigns]
+      summary: Get a campaign by ID
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Campaign found }
+        '404': { description: Campaign not found }
+    patch:
+      operationId: updateCampaign
+      tags: [Campaigns]
+      summary: Update a campaign
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+                metadata: { type: object }
+      responses:
+        '200': { description: Campaign updated }
+    delete:
+      operationId: deleteCampaign
+      tags: [Campaigns]
+      summary: Soft-delete a campaign
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Campaign deleted }
+  /characters:
+    get:
+      operationId: listCharacters
+      tags: [Characters]
+      summary: List characters in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: status, schema: { type: string, enum: [alive, dead, unknown, missing] } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of characters }
+    post:
+      operationId: createCharacter
+      tags: [Characters]
+      summary: Create a character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                aliases: { type: array, items: { type: string } }
+                species: { type: string }
+                gender: { type: string }
+                birth: { type: string }
+                death: { type: string }
+                status: { type: string, enum: [alive, dead, unknown, missing], default: alive }
+                organization: { type: string }
+                rank: { type: string }
+                currentPlanet: { type: string }
+                currentLocation: { type: string }
+                description: { type: string }
+                emotionalState: { type: string }
+                trust: { type: number }
+                respect: { type: number }
+                friendship: { type: number }
+                fear: { type: number }
+                curiosity: { type: number }
+                anger: { type: number }
+                love: { type: number }
+                hate: { type: number }
+                debt: { type: number }
+      responses:
+        '201': { description: Character created }
+  /characters/{id}:
+    get:
+      operationId: getCharacter
+      tags: [Characters]
+      summary: Get a character
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Character found }
+        '404': { description: Not found }
+    patch:
+      operationId: updateCharacter
+      tags: [Characters]
+      summary: Update a character
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                status: { type: string, enum: [alive, dead, unknown, missing] }
+                description: { type: string }
+                currentLocation: { type: string }
+                emotionalState: { type: string }
+                trust: { type: number }
+                respect: { type: number }
+                friendship: { type: number }
+                fear: { type: number }
+      responses:
+        '200': { description: Character updated }
+    delete:
+      operationId: deleteCharacter
+      tags: [Characters]
+      summary: Soft-delete a character
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Character deleted }
+  /locations:
+    get:
+      operationId: listLocations
+      tags: [Locations]
+      summary: List locations in a campaign
+      parameters:
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+        - { in: query, name: q, schema: { type: string } }
+      responses:
+        '200': { description: Paginated list of locations }
+    post:
+      operationId: createLocation
+      tags: [Locations]
+      summary: Create a location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId, name]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                planet: { type: string }
+                sector: { type: string }
+                region: { type: string }
+                coordinates: { type: string }
+                description: { type: string }
+                type: { type: string }
+      responses:
+        '201': { description: Location created }
+  /locations/{id}:
+    get:
+      operationId: getLocation
+      tags: [Locations]
+      summary: Get a location
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Location found }
+    patch:
+      operationId: updateLocation
+      tags: [Locations]
+      summary: Update a location
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [campaignId]
+              properties:
+                campaignId: { type: string }
+                name: { type: string }
+                description: { type: string }
+      responses:
+        '200': { description: Location updated }
+    delete:
+      operationId: deleteLocation
+      tags: [Locations]
+      summary: Soft-delete a location
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string } }
+        - { in: query, name: campaignId, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Location deleted }
