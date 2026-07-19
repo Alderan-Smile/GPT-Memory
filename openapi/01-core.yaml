@@ -3,7 +3,7 @@ info:
   title: GPT Memory API - Core (Health, Campaigns, Characters, Locations)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://core-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
   - name: Health
@@ -43,7 +43,7 @@ paths:
                       status: { type: string, example: ok }
                       timestamp: { type: string, format: date-time }
                       version: { type: string }
-  /campaigns:
+  /api/campaigns:
     get:
       operationId: listCampaigns
       tags: [Campaigns]
@@ -71,7 +71,7 @@ paths:
                 metadata: { type: object }
       responses:
         '201': { description: Campaign created }
-  /campaigns/{id}:
+  /api/campaigns/{id}:
     get:
       operationId: getCampaign
       tags: [Campaigns]
@@ -109,7 +109,7 @@ paths:
         - { in: path, name: id, required: true, schema: { type: string } }
       responses:
         '200': { description: Campaign deleted }
-  /characters:
+  /api/characters:
     get:
       operationId: listCharacters
       tags: [Characters]
@@ -159,7 +159,7 @@ paths:
                 debt: { type: number }
       responses:
         '201': { description: Character created }
-  /characters/{id}:
+  /api/characters/{id}:
     get:
       operationId: getCharacter
       tags: [Characters]
@@ -205,7 +205,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Character deleted }
-  /locations:
+  /api/locations:
     get:
       operationId: listLocations
       tags: [Locations]
@@ -239,7 +239,7 @@ paths:
                 type: { type: string }
       responses:
         '201': { description: Location created }
-  /locations/{id}:
+  /api/locations/{id}:
     get:
       operationId: getLocation
       tags: [Locations]

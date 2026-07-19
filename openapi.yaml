@@ -11,10 +11,8 @@ info:
     name: GPT Memory
 
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://core-gpt-memory.jokertcnr.workers.dev
     description: Production
-  - url: http://localhost:8787/api
-    description: Local development
 
 tags:
   - name: Health
@@ -101,7 +99,7 @@ paths:
                       timestamp: { type: string, format: date-time }
                       version: { type: string }
 
-  /campaigns:
+  /api/campaigns:
     get:
       operationId: listCampaigns
       tags: [Campaigns]
@@ -139,7 +137,7 @@ paths:
         '201':
           description: Campaign created
 
-  /campaigns/{id}:
+  /api/campaigns/{id}:
     get:
       operationId: getCampaign
       tags: [Campaigns]
@@ -191,7 +189,7 @@ paths:
         '200':
           description: Campaign deleted
 
-  /characters:
+  /api/characters:
     get:
       operationId: listCharacters
       tags: [Characters]
@@ -255,7 +253,7 @@ paths:
         '201':
           description: Character created
 
-  /characters/{id}:
+  /api/characters/{id}:
     get:
       operationId: getCharacter
       tags: [Characters]
@@ -321,7 +319,7 @@ paths:
         '200':
           description: Character deleted
 
-  /locations:
+  /api/locations:
     get:
       operationId: listLocations
       tags: [Locations]
@@ -367,7 +365,7 @@ paths:
         '201':
           description: Location created
 
-  /locations/{id}:
+  /api/locations/{id}:
     get:
       operationId: getLocation
       tags: [Locations]
@@ -424,7 +422,7 @@ paths:
         '200':
           description: Location deleted
 
-  /planets:
+  /api/planets:
     get:
       operationId: listPlanets
       tags: [Planets]
@@ -472,7 +470,7 @@ paths:
         '201':
           description: Planet created
 
-  /planets/{id}:
+  /api/planets/{id}:
     get:
       operationId: getPlanet
       tags: [Planets]
@@ -529,7 +527,7 @@ paths:
         '200':
           description: Planet deleted
 
-  /star-systems:
+  /api/star-systems:
     get:
       operationId: listStarSystems
       tags: [StarSystems]
@@ -573,7 +571,7 @@ paths:
         '201':
           description: Star system created
 
-  /star-systems/{id}:
+  /api/star-systems/{id}:
     get:
       operationId: getStarSystem
       tags: [StarSystems]
@@ -630,7 +628,7 @@ paths:
         '200':
           description: Star system deleted
 
-  /organizations:
+  /api/organizations:
     get:
       operationId: listOrganizations
       tags: [Organizations]
@@ -675,7 +673,7 @@ paths:
         '201':
           description: Organization created
 
-  /organizations/{id}:
+  /api/organizations/{id}:
     get:
       operationId: getOrganization
       tags: [Organizations]
@@ -732,7 +730,7 @@ paths:
         '200':
           description: Organization deleted
 
-  /ships:
+  /api/ships:
     get:
       operationId: listShips
       tags: [Ships]
@@ -779,7 +777,7 @@ paths:
         '201':
           description: Ship created
 
-  /ships/{id}:
+  /api/ships/{id}:
     get:
       operationId: getShip
       tags: [Ships]
@@ -836,7 +834,7 @@ paths:
         '200':
           description: Ship deleted
 
-  /vehicles:
+  /api/vehicles:
     get:
       operationId: listVehicles
       tags: [Vehicles]
@@ -882,7 +880,7 @@ paths:
         '201':
           description: Vehicle created
 
-  /vehicles/{id}:
+  /api/vehicles/{id}:
     get:
       operationId: getVehicle
       tags: [Vehicles]
@@ -939,7 +937,7 @@ paths:
         '200':
           description: Vehicle deleted
 
-  /objects:
+  /api/objects:
     get:
       operationId: listObjects
       tags: [Objects]
@@ -985,7 +983,7 @@ paths:
         '201':
           description: Object created
 
-  /objects/{id}:
+  /api/objects/{id}:
     get:
       operationId: getObject
       tags: [Objects]
@@ -1042,7 +1040,7 @@ paths:
         '200':
           description: Object deleted
 
-  /events:
+  /api/events:
     get:
       operationId: listEvents
       tags: [Events]
@@ -1095,7 +1093,7 @@ paths:
         '201':
           description: Event created
 
-  /events/{id}:
+  /api/events/{id}:
     get:
       operationId: getEvent
       tags: [Events]
@@ -1152,7 +1150,7 @@ paths:
         '200':
           description: Event deleted
 
-  /timeline:
+  /api/timeline:
     get:
       operationId: listTimeline
       tags: [Timeline]
@@ -1192,7 +1190,7 @@ paths:
         '201':
           description: Timeline entry created
 
-  /timeline/{id}:
+  /api/timeline/{id}:
     get:
       operationId: getTimelineEntry
       tags: [Timeline]
@@ -1233,7 +1231,7 @@ paths:
         '200':
           description: Timeline entry updated
 
-  /relationships:
+  /api/relationships:
     get:
       operationId: listRelationships
       tags: [Relationships]
@@ -1281,7 +1279,7 @@ paths:
         '201':
           description: Relationship created
 
-  /relationships/{id}:
+  /api/relationships/{id}:
     get:
       operationId: getRelationship
       tags: [Relationships]
@@ -1338,7 +1336,7 @@ paths:
         '200':
           description: Relationship deleted
 
-  /secrets:
+  /api/secrets:
     get:
       operationId: listSecrets
       tags: [Secrets]
@@ -1390,7 +1388,7 @@ paths:
         '201':
           description: Secret created
 
-  /secrets/{id}:
+  /api/secrets/{id}:
     get:
       operationId: getSecret
       tags: [Secrets]
@@ -1449,7 +1447,7 @@ paths:
         '200':
           description: Secret deleted
 
-  /knowledge/player:
+  /api/knowledge/player:
     get:
       operationId: listPlayerKnowledge
       tags: [PlayerKnowledge]
@@ -1500,7 +1498,7 @@ paths:
         '201':
           description: Player knowledge created
 
-  /knowledge/player/{id}:
+  /api/knowledge/player/{id}:
     get:
       operationId: getPlayerKnowledge
       tags: [PlayerKnowledge]
@@ -1557,7 +1555,7 @@ paths:
         '200':
           description: Player knowledge deleted
 
-  /knowledge/world:
+  /api/knowledge/world:
     get:
       operationId: listWorldKnowledge
       tags: [WorldKnowledge]
@@ -1607,7 +1605,7 @@ paths:
         '201':
           description: World knowledge created
 
-  /knowledge/world/{id}:
+  /api/knowledge/world/{id}:
     get:
       operationId: getWorldKnowledge
       tags: [WorldKnowledge]
@@ -1664,7 +1662,7 @@ paths:
         '200':
           description: World knowledge deleted
 
-  /quotes:
+  /api/quotes:
     get:
       operationId: listQuotes
       tags: [Quotes]
@@ -1709,7 +1707,7 @@ paths:
         '201':
           description: Quote created
 
-  /quotes/{id}:
+  /api/quotes/{id}:
     get:
       operationId: getQuote
       tags: [Quotes]
@@ -1766,7 +1764,7 @@ paths:
         '200':
           description: Quote deleted
 
-  /notes:
+  /api/notes:
     get:
       operationId: listNotes
       tags: [Notes]
@@ -1820,7 +1818,7 @@ paths:
         '201':
           description: Note created
 
-  /notes/{id}:
+  /api/notes/{id}:
     get:
       operationId: getNote
       tags: [Notes]
@@ -1878,7 +1876,7 @@ paths:
         '200':
           description: Note deleted
 
-  /sessions:
+  /api/sessions:
     get:
       operationId: listSessions
       tags: [Sessions]
@@ -1921,7 +1919,7 @@ paths:
         '201':
           description: Session created
 
-  /sessions/{id}:
+  /api/sessions/{id}:
     get:
       operationId: getSession
       tags: [Sessions]
@@ -1977,7 +1975,7 @@ paths:
         '200':
           description: Session deleted
 
-  /search:
+  /api/search:
     get:
       operationId: search
       tags: [Search]
@@ -2015,7 +2013,7 @@ paths:
         '200':
           description: Search results
 
-  /context:
+  /api/context:
     get:
       operationId: buildContext
       tags: [Context]

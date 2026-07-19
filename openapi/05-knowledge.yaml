@@ -3,14 +3,35 @@ info:
   title: GPT Memory API - Knowledge (Secrets, Player Knowledge, World Knowledge)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://knowledge-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
+  - name: Health
   - name: Secrets
   - name: PlayerKnowledge
   - name: WorldKnowledge
 paths:
-  /secrets:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /api/secrets:
     get:
       operationId: listSecrets
       tags: [Secrets]
@@ -46,7 +67,7 @@ paths:
                 relatedEntities: { type: array, items: { type: string } }
       responses:
         '201': { description: Secret created }
-  /secrets/{id}:
+  /api/secrets/{id}:
     get:
       operationId: getSecret
       tags: [Secrets]
@@ -86,7 +107,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Secret deleted }
-  /knowledge/player:
+  /api/knowledge/player:
     get:
       operationId: listPlayerKnowledge
       tags: [PlayerKnowledge]
@@ -121,7 +142,7 @@ paths:
                 category: { type: string }
       responses:
         '201': { description: Player knowledge created }
-  /knowledge/player/{id}:
+  /api/knowledge/player/{id}:
     get:
       operationId: getPlayerKnowledge
       tags: [PlayerKnowledge]
@@ -159,7 +180,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Player knowledge deleted }
-  /knowledge/world:
+  /api/knowledge/world:
     get:
       operationId: listWorldKnowledge
       tags: [WorldKnowledge]
@@ -193,7 +214,7 @@ paths:
                 sources: { type: array, items: { type: string } }
       responses:
         '201': { description: World knowledge created }
-  /knowledge/world/{id}:
+  /api/knowledge/world/{id}:
     get:
       operationId: getWorldKnowledge
       tags: [WorldKnowledge]

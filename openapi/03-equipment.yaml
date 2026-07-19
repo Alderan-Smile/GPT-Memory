@@ -3,14 +3,35 @@ info:
   title: GPT Memory API - Vehicles & Equipment (Ships, Vehicles, Objects)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://vehicles-quipment-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
+  - name: Health
   - name: Ships
   - name: Vehicles
   - name: Objects
 paths:
-  /ships:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /api/ships:
     get:
       operationId: listShips
       tags: [Ships]
@@ -45,7 +66,7 @@ paths:
                 manufacturer: { type: string }
       responses:
         '201': { description: Ship created }
-  /ships/{id}:
+  /api/ships/{id}:
     get:
       operationId: getShip
       tags: [Ships]
@@ -83,7 +104,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Ship deleted }
-  /vehicles:
+  /api/vehicles:
     get:
       operationId: listVehicles
       tags: [Vehicles]
@@ -117,7 +138,7 @@ paths:
                 manufacturer: { type: string }
       responses:
         '201': { description: Vehicle created }
-  /vehicles/{id}:
+  /api/vehicles/{id}:
     get:
       operationId: getVehicle
       tags: [Vehicles]
@@ -155,7 +176,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Vehicle deleted }
-  /objects:
+  /api/objects:
     get:
       operationId: listObjects
       tags: [Objects]
@@ -189,7 +210,7 @@ paths:
                 rarity: { type: string, enum: [common, uncommon, rare, unique, legendary] }
       responses:
         '201': { description: Object created }
-  /objects/{id}:
+  /api/objects/{id}:
     get:
       operationId: getObject
       tags: [Objects]

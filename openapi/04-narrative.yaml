@@ -3,14 +3,35 @@ info:
   title: GPT Memory API - Narrative (Events, Timeline, Relationships)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://narrative-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
+  - name: Health
   - name: Events
   - name: Timeline
   - name: Relationships
 paths:
-  /events:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /api/events:
     get:
       operationId: listEvents
       tags: [Events]
@@ -47,7 +68,7 @@ paths:
                 participants: { type: array, items: { type: string } }
       responses:
         '201': { description: Event created }
-  /events/{id}:
+  /api/events/{id}:
     get:
       operationId: getEvent
       tags: [Events]
@@ -85,7 +106,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Event deleted }
-  /timeline:
+  /api/timeline:
     get:
       operationId: listTimeline
       tags: [Timeline]
@@ -115,7 +136,7 @@ paths:
                 label: { type: string }
       responses:
         '201': { description: Timeline entry created }
-  /timeline/{id}:
+  /api/timeline/{id}:
     get:
       operationId: getTimelineEntry
       tags: [Timeline]
@@ -144,7 +165,7 @@ paths:
                 label: { type: string }
       responses:
         '200': { description: Timeline entry updated }
-  /relationships:
+  /api/relationships:
     get:
       operationId: listRelationships
       tags: [Relationships]
@@ -177,7 +198,7 @@ paths:
                 history: { type: string }
       responses:
         '201': { description: Relationship created }
-  /relationships/{id}:
+  /api/relationships/{id}:
     get:
       operationId: getRelationship
       tags: [Relationships]

@@ -1,4 +1,4 @@
-name = "gpt-memory"
+name = "misc-search-gpt-memory"
 main = "src/index.ts"
 compatibility_date = "2024-07-25"
 compatibility_flags = ["nodejs_compat"]

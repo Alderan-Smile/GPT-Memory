@@ -3,16 +3,37 @@ info:
   title: GPT Memory API - Misc & Search (Quotes, Notes, Sessions, Search, Context)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://misc-search-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
+  - name: Health
   - name: Quotes
   - name: Notes
   - name: Sessions
   - name: Search
   - name: Context
 paths:
-  /quotes:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /api/quotes:
     get:
       operationId: listQuotes
       tags: [Quotes]
@@ -43,7 +64,7 @@ paths:
                 context: { type: string }
       responses:
         '201': { description: Quote created }
-  /quotes/{id}:
+  /api/quotes/{id}:
     get:
       operationId: getQuote
       tags: [Quotes]
@@ -81,7 +102,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Quote deleted }
-  /notes:
+  /api/notes:
     get:
       operationId: listNotes
       tags: [Notes]
@@ -116,7 +137,7 @@ paths:
                 pinned: { type: boolean, default: false }
       responses:
         '201': { description: Note created }
-  /notes/{id}:
+  /api/notes/{id}:
     get:
       operationId: getNote
       tags: [Notes]
@@ -155,7 +176,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Note deleted }
-  /sessions:
+  /api/sessions:
     get:
       operationId: listSessions
       tags: [Sessions]
@@ -186,7 +207,7 @@ paths:
                 eventsOccurred: { type: array, items: { type: string } }
       responses:
         '201': { description: Session created }
-  /sessions/{id}:
+  /api/sessions/{id}:
     get:
       operationId: getSession
       tags: [Sessions]
@@ -223,7 +244,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Session deleted }
-  /search:
+  /api/search:
     get:
       operationId: search
       tags: [Search]
@@ -239,7 +260,7 @@ paths:
         - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
       responses:
         '200': { description: Search results }
-  /context:
+  /api/context:
     get:
       operationId: buildContext
       tags: [Context]

@@ -3,14 +3,35 @@ info:
   title: GPT Memory API - World Building (Planets, Star Systems, Organizations)
   version: 1.0.0
 servers:
-  - url: https://gpt-memory.jokertcnr.workers.dev/api
+  - url: https://world-building-gpt-memory.jokertcnr.workers.dev
     description: Production
 tags:
+  - name: Health
   - name: Planets
   - name: StarSystems
   - name: Organizations
 paths:
-  /planets:
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string, example: ok }
+                      timestamp: { type: string, format: date-time }
+                      version: { type: string }
+  /api/planets:
     get:
       operationId: listPlanets
       tags: [Planets]
@@ -46,7 +67,7 @@ paths:
                 government: { type: string }
       responses:
         '201': { description: Planet created }
-  /planets/{id}:
+  /api/planets/{id}:
     get:
       operationId: getPlanet
       tags: [Planets]
@@ -84,7 +105,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Planet deleted }
-  /star-systems:
+  /api/star-systems:
     get:
       operationId: listStarSystems
       tags: [StarSystems]
@@ -116,7 +137,7 @@ paths:
                 description: { type: string }
       responses:
         '201': { description: Star system created }
-  /star-systems/{id}:
+  /api/star-systems/{id}:
     get:
       operationId: getStarSystem
       tags: [StarSystems]
@@ -154,7 +175,7 @@ paths:
         - { in: query, name: campaignId, required: true, schema: { type: string } }
       responses:
         '200': { description: Star system deleted }
-  /organizations:
+  /api/organizations:
     get:
       operationId: listOrganizations
       tags: [Organizations]
@@ -187,7 +208,7 @@ paths:
                 headquarters: { type: string }
       responses:
         '201': { description: Organization created }
-  /organizations/{id}:
+  /api/organizations/{id}:
     get:
       operationId: getOrganization
       tags: [Organizations]
