@@ -12,7 +12,17 @@ info:
 
 servers:
   - url: https://core-gpt-memory.jokertcnr.workers.dev
-    description: Production
+    description: Production core
+  - url: https://world-building-gpt-memory.jokertcnr.workers.dev
+    description: Production world building
+  - url: https://vehicles-quipment-gpt-memory.jokertcnr.workers.dev
+    description: Production vehicles & equipment
+  - url: https://narrative-gpt-memory.jokertcnr.workers.dev
+    description: Production narrative
+  - url: https://knowledge-gpt-memory.jokertcnr.workers.dev
+    description: Production knowledge
+  - url: https://misc-search-gpt-memory.jokertcnr.workers.dev
+    description: Production miscellaneous search
 
 tags:
   - name: Health
